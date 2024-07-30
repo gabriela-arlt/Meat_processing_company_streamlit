@@ -541,7 +541,7 @@ col_left_1, col_center_1, col_right_1 = st.columns([1, 3, 1])
 
 # Display the map in the center column
 with col_center_1:
-    st_folium(sales_map, use_container_width=True)
+    st_folium(sales_map)
 
 # Display the number of clients per year bar chart in the left column
 with col_left_1:
