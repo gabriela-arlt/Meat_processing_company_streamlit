@@ -174,7 +174,7 @@ min_date = data['Order_date'].min()
 max_date = data['Order_date'].max()
 
 # Create a list of monthly periods
-monthly_periods = pd.date_range(start=min_date, end=max_date, freq='ME').to_period('M')
+monthly_periods = pd.date_range(start=min_date, end=max_date, freq='M').to_period('M')
 
 # Add a slider for selecting the date range
 start_period, end_period = st.select_slider(
