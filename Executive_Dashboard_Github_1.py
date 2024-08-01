@@ -229,13 +229,6 @@ total_sales_per_product_type = filtered_data.groupby('Product_type')['Sales'].su
 total_orders_per_product_type = filtered_data.groupby('Product_type')['Document_number'].nunique().reset_index()
 average_order_value_per_product_type = filtered_data.groupby('Product_type')['Sales'].mean().reset_index()
 
-# Define a simple color palette
-simple_color_palette = px.colors.sequential.Reds[:len(total_sales_per_product_type)]
-
-# Generate color scales for the pie charts
-colors_sales = simple_color_palette
-colors_orders = simple_color_palette
-colors_avg_order_value = simple_color_palette
 
 # Your existing code to create charts using the generated colors
 
@@ -320,15 +313,15 @@ def create_pie_chart_with_shadow(data, values_column, names_column, title, color
     return fig
 
 # Total Sales per Product Type
-fig1 = create_pie_chart_with_shadow(total_sales_per_product_type, 'Sales', 'Product_type', 'Total Sales per Product Type', colors_sales)
+fig1 = create_pie_chart_with_shadow(total_sales_per_product_type, 'Sales', 'Product_type', 'Total Sales per Product Type')
 update_traces_conditional(fig1)
 
 # Average Order Value per Product Type
-fig2 = create_pie_chart_with_shadow(average_order_value_per_product_type, 'Sales', 'Product_type', 'Average Order Value per Product Type', colors_avg_order_value)
+fig2 = create_pie_chart_with_shadow(average_order_value_per_product_type, 'Sales', 'Product_type', 'Average Order Value per Product Type')
 update_traces_conditional(fig2)
 
 # Total Orders per Product Type
-fig3 = create_pie_chart_with_shadow(total_orders_per_product_type, 'Document_number', 'Product_type', 'Total Orders per Product Type', colors_orders)
+fig3 = create_pie_chart_with_shadow(total_orders_per_product_type, 'Document_number', 'Product_type', 'Total Orders per Product Type')
 update_traces_conditional(fig3)
 
 # Row 1 with 3 columns
@@ -617,10 +610,9 @@ data_second_filtered = data_second[
 
 # Pie Chart for Sum of Sales per Product with filtered data
 sales_per_product = data_second_filtered.groupby('Product')['Sales'].sum().reset_index()
-colors_sales = simple_color_palette(sales_per_product['Sales'])
 
 fig_pie = px.pie(sales_per_product, values='Sales', names='Product', title='Sum of Sales per Product',
-                 template='plotly_dark', color_discrete_sequence=colors_sales)
+                 template='plotly_dark')
 fig_pie.update_traces(textinfo='none', hoverinfo='label+percent+value')
 fig_pie.update_layout(
     paper_bgcolor='rgba(0,0,0,0)',
