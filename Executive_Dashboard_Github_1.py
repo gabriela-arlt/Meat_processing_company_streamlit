@@ -617,7 +617,7 @@ data_second_filtered = data_second[
 
 # Pie Chart for Sum of Sales per Product with filtered data
 sales_per_product = data_second_filtered.groupby('Product')['Sales'].sum().reset_index()
-colors_sales = generate_reversed_color_scale(sales_per_product['Sales'])
+colors_sales = simple_color_palette(sales_per_product['Sales'])
 
 fig_pie = px.pie(sales_per_product, values='Sales', names='Product', title='Sum of Sales per Product',
                  template='plotly_dark', color_discrete_sequence=colors_sales)
