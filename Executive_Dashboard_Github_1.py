@@ -312,6 +312,9 @@ def create_pie_chart_with_shadow(data, values_column, names_column, title, color
     
     return fig
 
+# Define a color palette
+colors = px.colors.sequential.Reds[:len(total_sales_per_product_type)]
+
 # Total Sales per Product Type
 fig1 = create_pie_chart_with_shadow(total_sales_per_product_type, 'Sales', 'Product_type', 'Total Sales per Product Type')
 update_traces_conditional(fig1)
