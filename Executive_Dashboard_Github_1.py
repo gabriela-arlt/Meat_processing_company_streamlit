@@ -276,35 +276,22 @@ total_sales_per_product_type['Product_type'] = split_labels(total_sales_per_prod
 average_order_value_per_product_type['Product_type'] = split_labels(average_order_value_per_product_type['Product_type'])
 total_orders_per_product_type['Product_type'] = split_labels(total_orders_per_product_type['Product_type'])
 
-# Function to create pie charts with shadows and separate the largest slice
-def create_pie_chart_with_shadow(data, values_column, names_column, title):
+# Function to create pie charts with the largest slice exploded
+def create_pie_chart_with_exploded_slice(data, values_column, names_column, title):
     largest_slice_index = data[values_column].idxmax()
     pull_values = [0.1 if i == largest_slice_index else 0 for i in range(len(data))]
     
-    # Create the shadow pie chart with a semi-transparent color
-    shadow_pie = go.Pie(
+    # Create the pie chart with automatic colors
+    pie_chart = go.Pie(
         labels=data[names_column],
         values=data[values_column],
         hole=0.3,
         pull=pull_values,
-        marker=dict(colors=['rgba(0, 0, 0, 0.2)'] * len(data)),  # Shadow color
-        textinfo='none',
-        hoverinfo='none',
-        domain=dict(x=[0, 1], y=[0, 1])
-    )
-    
-    # Create the main pie chart with automatic colors
-    main_pie = go.Pie(
-        labels=data[names_column],
-        values=data[values_column],
-        hole=0.3,
-        pull=pull_values,
-        textposition='inside',
-        domain=dict(x=[0.02, 0.98], y=[0.02, 0.98])
+        textposition='inside'
     )
     
     # Create the figure
-    fig = go.Figure(data=[shadow_pie, main_pie])
+    fig = go.Figure(data=[pie_chart])
     fig.update_layout(
         title=dict(text=title, x=0.25),
         paper_bgcolor='#FFDAB9',
@@ -315,15 +302,15 @@ def create_pie_chart_with_shadow(data, values_column, names_column, title):
     return fig
 
 # Total Sales per Product Type
-fig1 = create_pie_chart_with_shadow(total_sales_per_product_type, 'Sales', 'Product_type', 'Total Sales per Product Type')
+fig1 = create_pie_chart_with_exploded_slice(total_sales_per_product_type, 'Sales', 'Product_type', 'Total Sales per Product Type')
 update_traces_conditional(fig1)
 
 # Average Order Value per Product Type
-fig2 = create_pie_chart_with_shadow(average_order_value_per_product_type, 'Sales', 'Product_type', 'Average Order Value per Product Type')
+fig2 = create_pie_chart_with_exploded_slice(average_order_value_per_product_type, 'Sales', 'Product_type', 'Average Order Value per Product Type')
 update_traces_conditional(fig2)
 
 # Total Orders per Product Type
-fig3 = create_pie_chart_with_shadow(total_orders_per_product_type, 'Document_number', 'Product_type', 'Total Orders per Product Type')
+fig3 = create_pie_chart_with_exploded_slice(total_orders_per_product_type, 'Document_number', 'Product_type', 'Total Orders per Product Type')
 update_traces_conditional(fig3)
 
 # Row 1 with 3 columns
