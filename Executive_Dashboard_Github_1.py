@@ -234,22 +234,30 @@ total_sales_per_product_type = filtered_data.groupby('Product_type')['Sales'].su
 total_orders_per_product_type = filtered_data.groupby('Product_type')['Document_number'].nunique().reset_index()
 average_order_value_per_product_type = filtered_data.groupby('Product_type')['Sales'].mean().reset_index()
 
-# Update this function to handle division by zero
-def generate_reversed_color_scale(amounts):
-    min_amount = min(amounts)
-    max_amount = max(amounts)
-    if max_amount == min_amount:
-        return [px.colors.sequential.Reds[0]] * len(amounts)  # return a single color if all values are the same
-    color_scale = [
-        px.colors.sequential.Reds[int((max_amount - amount) / (max_amount - min_amount) * (len(px.colors.sequential.Reds) - 1))]
-        for amount in amounts
-    ]
-    return color_scale[::-1]
 
-# Generate reversed color scales for the pie charts
-colors_sales = generate_reversed_color_scale(total_sales_per_product_type['Sales'])
-colors_orders = generate_reversed_color_scale(total_orders_per_product_type['Document_number'])
-colors_avg_order_value = generate_reversed_color_scale(average_order_value_per_product_type['Sales'])
+
+# Define a simplified function to handle color scales without loops
+def generate_simple_color_scale(amounts, color_palette=px.colors.sequential.Reds):
+    # Handle empty list
+    if not amounts:
+        return [color_palette[0]]
+    
+    # Handle case when all values are the same
+    if min(amounts) == max(amounts):
+        return [color_palette[0]] * len(amounts)
+    
+    # Use a subset of the color palette
+    return color_palette[:len(amounts)]
+
+
+# Generate color scales for the pie charts
+colors_sales = generate_simple_color_scale(total_sales_per_product_type['Sales'])
+colors_orders = generate_simple_color_scale(total_orders_per_product_type['Document_number'])
+colors_avg_order_value = generate_simple_color_scale(average_order_value_per_product_type['Sales'])
+
+# Your existing code to create charts using the generated colors
+# This is where you would use these color scales in your Streamlit application
+
 
 # Function to update trace textinfo conditionally
 def update_traces_conditional(fig, show_top_n=1):
