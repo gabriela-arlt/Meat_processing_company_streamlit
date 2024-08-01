@@ -158,16 +158,14 @@ def load_data_from_url():
 
 data = load_data_from_url()
 
-
-
 # Dropdown for the dataframe
 with st.expander("Data Preview"):
     st.dataframe(data)
 
 # Convert date column to datetime format
 data['Order_date'] = pd.to_datetime(data['Order_date'])
-data_kpi=data.copy()
-data_second=data.copy()
+data_kpi = data.copy()
+data_second = data.copy()
 
 # Define the date range for the slider
 min_date = data['Order_date'].min()
@@ -182,7 +180,6 @@ start_period, end_period = st.select_slider(
     options=monthly_periods,
     value=(monthly_periods[0], monthly_periods[-1])
 )
-
 
 # Add multiselect filters in the sidebar
 with st.sidebar:
@@ -227,37 +224,20 @@ else:
         (data['Distribution_type'].isin(selected_distribution_types))
     ].copy()
 
-
-
 # Data preprocessing for first row
 total_sales_per_product_type = filtered_data.groupby('Product_type')['Sales'].sum().reset_index()
 total_orders_per_product_type = filtered_data.groupby('Product_type')['Document_number'].nunique().reset_index()
 average_order_value_per_product_type = filtered_data.groupby('Product_type')['Sales'].mean().reset_index()
 
-
-
-# Define a simplified function to handle color scales without loops
-def generate_simple_color_scale(amounts, color_palette=px.colors.sequential.Reds):
-    # Handle empty list
-    if not amounts:
-        return [color_palette[0]]
-    
-    # Handle case when all values are the same
-    if min(amounts) == max(amounts):
-        return [color_palette[0]] * len(amounts)
-    
-    # Use a subset of the color palette
-    return color_palette[:len(amounts)]
-
+# Define a simple color palette
+simple_color_palette = px.colors.sequential.Reds[:len(total_sales_per_product_type)]
 
 # Generate color scales for the pie charts
-colors_sales = generate_simple_color_scale(total_sales_per_product_type['Sales'])
-colors_orders = generate_simple_color_scale(total_orders_per_product_type['Document_number'])
-colors_avg_order_value = generate_simple_color_scale(average_order_value_per_product_type['Sales'])
+colors_sales = simple_color_palette
+colors_orders = simple_color_palette
+colors_avg_order_value = simple_color_palette
 
 # Your existing code to create charts using the generated colors
-# This is where you would use these color scales in your Streamlit application
-
 
 # Function to update trace textinfo conditionally
 def update_traces_conditional(fig, show_top_n=1):
@@ -351,7 +331,6 @@ update_traces_conditional(fig2)
 fig3 = create_pie_chart_with_shadow(total_orders_per_product_type, 'Document_number', 'Product_type', 'Total Orders per Product Type', colors_orders)
 update_traces_conditional(fig3)
 
-
 # Row 1 with 3 columns
 col1, col2, col3 = st.columns(3)
 
@@ -360,7 +339,7 @@ with col1:
 with col2:
     st.plotly_chart(fig3, use_container_width=True)
 with col3:
-      st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, use_container_width=True)
 
 # Data Processing Row 2
 
