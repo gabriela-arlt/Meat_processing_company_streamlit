@@ -278,6 +278,11 @@ total_orders_per_product_type['Product_type'] = split_labels(total_orders_per_pr
 
 # Function to create pie charts with the largest slice exploded
 def create_pie_chart_with_exploded_slice(data, values_column, names_column, title):
+    # Check if the data is empty
+    if data.empty:
+        st.warning(f"No data available for {title}. Please adjust the filters.")
+        return None
+    
     largest_slice_index = data[values_column].idxmax()
     pull_values = [0.1 if i == largest_slice_index else 0 for i in range(len(data))]
     
@@ -303,25 +308,31 @@ def create_pie_chart_with_exploded_slice(data, values_column, names_column, titl
 
 # Total Sales per Product Type
 fig1 = create_pie_chart_with_exploded_slice(total_sales_per_product_type, 'Sales', 'Product_type', 'Total Sales per Product Type')
-update_traces_conditional(fig1)
+if fig1:
+    update_traces_conditional(fig1)
 
 # Average Order Value per Product Type
 fig2 = create_pie_chart_with_exploded_slice(average_order_value_per_product_type, 'Sales', 'Product_type', 'Average Order Value per Product Type')
-update_traces_conditional(fig2)
+if fig2:
+    update_traces_conditional(fig2)
 
 # Total Orders per Product Type
 fig3 = create_pie_chart_with_exploded_slice(total_orders_per_product_type, 'Document_number', 'Product_type', 'Total Orders per Product Type')
-update_traces_conditional(fig3)
+if fig3:
+    update_traces_conditional(fig3)
 
 # Row 1 with 3 columns
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.plotly_chart(fig1, use_container_width=True)
+    if fig1:
+        st.plotly_chart(fig1, use_container_width=True)
 with col2:
-    st.plotly_chart(fig3, use_container_width=True)
+    if fig3:
+        st.plotly_chart(fig3, use_container_width=True)
 with col3:
-    st.plotly_chart(fig2, use_container_width=True)
+    if fig2:
+        st.plotly_chart(fig2, use_container_width=True)
 
 # Data Processing Row 2
 
